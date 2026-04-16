@@ -10,12 +10,14 @@ Original file is located at
 #!pip install torch transformers pandas
 # !pip install Keras-Preprocessing
 
+import os
+os.environ.setdefault('PYTORCH_MPS_HIGH_WATERMARK_RATIO', '0.0')
+
 import torch
 import torch.nn as nn
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments
 from torch.utils.data import DataLoader, Dataset
 from sklearn.metrics import confusion_matrix
-import os
 import pandas as pd
 import numpy as np
 #from timm.optim.lion import Lion
@@ -37,8 +39,13 @@ test_data_path = join(DATA_PATH,'testing_data')
 
 
 # Set device to GPU if available, otherwise use CPU
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-#device = torch.device('cpu')
+if torch.cuda.is_available():
+    device = torch.device('cuda')
+elif torch.backends.mps.is_available():
+    device = torch.device('mps')
+else:
+    device = torch.device('cpu')
+print(f"Using device: {device}")
 
 # Define the tokenizer and the model
 tokenizer = AutoTokenizer.from_pretrained("microsoft/codebert-base")
@@ -61,10 +68,8 @@ class CodeDataset(Dataset):
 
     def __getitem__(self, index):
         code, label = self.samples[index]
-        inputs = tokenizer.encode_plus(code, padding='max_length', max_length=512, truncation=True)
-        input_ids = inputs['input_ids']
-        attention_mask = inputs['attention_mask']
-        return {'input_ids': torch.tensor(input_ids, dtype=torch.long), 'attention_mask': torch.tensor(attention_mask, dtype=torch.long), 'labels': torch.tensor(label, dtype=torch.long)}
+        inputs = tokenizer(code, padding='max_length', max_length=512, truncation=True, return_tensors='pt')
+        return {'input_ids': inputs['input_ids'].squeeze(0), 'attention_mask': inputs['attention_mask'].squeeze(0), 'labels': torch.tensor(label, dtype=torch.long)}
 
 
 def get_code_without_comments(filepath):
@@ -118,8 +123,13 @@ trainer = Trainer(
 # Train the model with the pre-defined parameters
 trainer.train()
 
+# Save the trained model for later reuse
+model.save_pretrained('./saved_model')
+tokenizer.save_pretrained('./saved_model')
+print("Model saved to ./saved_model")
 
 # Test the model and print out the confusion matrix
+model.to(device)
 model.eval()
 y_true = []
 y_pred = []

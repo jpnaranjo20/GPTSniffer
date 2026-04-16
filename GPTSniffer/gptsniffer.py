@@ -41,8 +41,13 @@ test_data_path = join(DATA_PATH,'testing_data')
 
 
 # Set device to GPU if available, otherwise use CPU
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-#device = torch.device('cpu')
+if torch.cuda.is_available():
+    device = torch.device('cuda')
+elif torch.backends.mps.is_available():
+    device = torch.device('mps')
+else:
+    device = torch.device('cpu')
+print(f"Using device: {device}")
 
 # Define the tokenizer and the model
 tokenizer = AutoTokenizer.from_pretrained("microsoft/codebert-base")
@@ -122,8 +127,13 @@ trainer = Trainer(
 # Train the model with the pre-defined parameters
 trainer.train()
 
+# Save the trained model for later reuse
+model.save_pretrained('./saved_model')
+tokenizer.save_pretrained('./saved_model')
+print("Model saved to ./saved_model")
 
 # Test the model and print out the confusion matrix
+model.to(device)
 model.eval()
 y_true = []
 y_pred = []
