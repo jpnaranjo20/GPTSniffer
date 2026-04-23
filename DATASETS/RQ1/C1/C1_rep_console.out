@@ -1,0 +1,234 @@
+Using device: cuda
+/usr/local/lib/python3.12/dist-packages/huggingface_hub/utils/_auth.py:93: UserWarning: 
+The secret `HF_TOKEN` does not exist in your Colab secrets.
+To authenticate with the Hugging Face Hub, create a token in your settings tab (https://huggingface.co/settings/tokens), set it as secret in your Google Colab and restart your session.
+You will be able to reuse this secret in all of your notebooks.
+Please note that authentication is recommended but still optional to access public models or datasets.
+  warnings.warn(
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights: 100%
+ 197/197 [00:00<00:00, 1159.45it/s, Materializing param=roberta.encoder.layer.11.output.dense.weight]
+RobertaForSequenceClassification LOAD REPORT from: microsoft/codebert-base
+Key                        | Status     | 
+---------------------------+------------+-
+pooler.dense.bias          | UNEXPECTED | 
+pooler.dense.weight        | UNEXPECTED | 
+classifier.out_proj.bias   | MISSING    | 
+classifier.out_proj.weight | MISSING    | 
+classifier.dense.bias      | MISSING    | 
+classifier.dense.weight    | MISSING    | 
+
+Notes:
+- UNEXPECTED	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING	:those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+
+
+ 
+    
+      
+      
+      [456/456 04:42, Epoch 12/12]
+    
+    
+  
+ 
+      Step
+      Training Loss
+    
+  
+  
+    
+      10
+      0.696372
+    
+    
+      20
+      0.689821
+    
+    
+      30
+      0.686866
+    
+    
+      40
+      0.681186
+    
+    
+      50
+      0.664862
+    
+    
+      60
+      0.654839
+    
+    
+      70
+      0.607932
+    
+    
+      80
+      0.429613
+    
+    
+      90
+      0.220773
+    
+    
+      100
+      0.139836
+    
+    
+      110
+      0.113233
+    
+    
+      120
+      0.063216
+    
+    
+      130
+      0.053908
+    
+    
+      140
+      0.027715
+    
+    
+      150
+      0.065590
+    
+    
+      160
+      0.050289
+    
+    
+      170
+      0.009674
+    
+    
+      180
+      0.033881
+    
+    
+      190
+      0.014222
+    
+    
+      200
+      0.026973
+    
+    
+      210
+      0.002510
+    
+    
+      220
+      0.017911
+    
+    
+      230
+      0.002072
+    
+    
+      240
+      0.001860
+    
+    
+      250
+      0.003933
+    
+    
+      260
+      0.038240
+    
+    
+      270
+      0.034986
+    
+    
+      280
+      0.001495
+    
+    
+      290
+      0.006075
+    
+    
+      300
+      0.024874
+    
+    
+      310
+      0.001571
+    
+    
+      320
+      0.000954
+    
+    
+      330
+      0.024258
+    
+    
+      340
+      0.001110
+    
+    
+      350
+      0.000942
+    
+    
+      360
+      0.000609
+    
+    
+      370
+      0.023519
+    
+    
+      380
+      0.001055
+    
+    
+      390
+      0.001119
+    
+    
+      400
+      0.000719
+    
+    
+      410
+      0.020334
+    
+    
+      420
+      0.053031
+    
+    
+      430
+      0.025187
+    
+    
+      440
+      0.022658
+    
+    
+      450
+      0.001940
+    
+  
+Writing model shards: 100% 1/1 [00:01<00:00,  1.16s/it]Writing model shards: 100% 1/1 [00:01<00:00,  1.22s/it]Model saved to ./saved_model
+
+ Confusion Matrix
+Normalized confusion matrix
+Classification Report
+              precision    recall  f1-score   support
+
+     ChatGPT       0.90      1.00      0.95       148
+       Human       1.00      0.89      0.94       147
+
+    accuracy                           0.95       295
+   macro avg       0.95      0.95      0.95       295
+weighted avg       0.95      0.95      0.95       295
